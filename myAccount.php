@@ -1,31 +1,15 @@
 <?php
 session_start();
-require 'preorder_form.php';
+require 'config.php';
 
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
+
 $id = $_SESSION["id"];
 $result = mysqli_query($conn, "SELECT * FROM user WHERE id_user = '$id'");
 $row = mysqli_fetch_assoc($result);
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-} else {
-    $op = "";
-}
-
-if ($op == 'delete') {
-    $id_beli = $_GET['id'];
-    $sql1 = "DELETE FROM preorder_form where id = '$id_beli'";
-    $q1 = mysqli_query($conn, $sql1);
-    if ($q1) {
-        $sukses = "Berhasil hapus data";
-    } else {
-        $error = "Gagal melakukan delete data";
-    }
-}
 
 ?>
 <!DOCTYPE html>
@@ -139,14 +123,16 @@ if ($op == 'delete') {
                                                                 </tr>
                                                             <tbody>
                                                                 <?php
+                                                                $i = 1;
                                                                 $sql2 = "SELECT preorder_form.id, merch_item.nama_item, preorder_form.jumlah, merch_item.harga, (merch_item.harga * preorder_form.jumlah) AS total FROM preorder_form JOIN merch_item ON preorder_form.item = merch_item.id_item WHERE preorder_form.id_user = '$id' ORDER BY id ASC";
                                                                 $q2 = mysqli_query($conn, $sql2);
                                                                 while ($r2 = mysqli_fetch_array($q2)) {
-                                                                    $id_transaksi = $r2['id'];
+                                                                    $id_transaksi = $i;
                                                                     $nama_item = $r2['nama_item'];
                                                                     $quantity = $r2['jumlah'];
                                                                     $harga = $r2['harga'];
                                                                     $jumlah = $r2['total'];
+                                                                    $i++;
                                                                     ?>
                                                                     <tr>
                                                                         <th scope="row">

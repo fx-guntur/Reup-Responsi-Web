@@ -1,78 +1,11 @@
 <?php
 session_start();
-require 'preorder_form.php';
+require 'config.php';
 
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
-
-if (isset($_GET['op'])) {
-    $op = $_GET['op'];
-} else {
-    $op = "";
-}
-
-if ($op == 'edit') {
-    $id_beli = $_GET['id'];
-    $sql1 = "SELECT * FROM preorder_form where id = '$id_beli'";
-    $q1 = mysqli_query($conn, $sql1);
-    $r1 = mysqli_fetch_array($q1);
-    $nama = $r1['nama'];
-    $email = $r1['email'];
-    $phone = $r1['phone'];
-    $quantity = $r1['jumlah'];
-    $id_item = $r1['item'];
-    // $sql2 = "SELECT * FROM merch_item where id_item = '$id_item'";
-    // $q2 = mysqli_query($conn, $sql2);
-    // $r2 = mysqli_fetch_array($q2);
-    // $item_selected = $r2['nama_item'];
-}
-
-
-if (isset($_POST['send'])) {
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $hp = mysqli_real_escape_string($conn, $_POST['phone']);
-    $id_item = mysqli_real_escape_string($conn, $_POST['choosedItem']);
-    $jumlah = mysqli_real_escape_string($conn, $_POST['quantity']);
-    $id_user = mysqli_real_escape_string($conn, $_SESSION['id']);
-
-    if ($nama && $email && $hp && $id_item && $jumlah) {
-        if ($op == 'edit') {
-            $sql1 = "UPDATE preorder_form SET nama = '$nama', email = '$email', phone = '$phone',  item = '$id_item', jumlah = '$jumlah' WHERE id = '$id_beli'";
-            $q1 = mysqli_query($conn, $sql1);
-            if ($q1) {
-                $sukses = "Data berhasil di Update";
-            } else {
-                $error = "Data gagal diupdate";
-            }
-        } else{
-        $sqli = "INSERT INTO preorder_form(nama, email, phone, item, jumlah, id_user) VALUES('$nama','$email','$hp', '$id_item', '$jumlah', '$id_user')";
-        $q1 = mysqli_query($conn, $sqli);
-        if ($q1) {
-            ?>
-            <script>
-                alert('Pre-order Success!');
-            </script>
-            <?php
-        } else {
-            ?>
-            <script>
-                alert('Pre-order failed!');
-            </script>
-            <?php
-        }
-    }
- } else {
-        ?>
-        <script>
-            alert('Please input all the data!');
-        </script>
-        <?php
-    }
-}
-
 ?>
 
 <!DOCTYPE html>

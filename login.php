@@ -1,38 +1,11 @@
 <?php 
 session_start();
-require 'preorder_form.php';
+require 'config.php';
 
 if( isset($_SESSION["login"]) ) {
 	header("Location: home.php");
 	exit;
 }
-
-if( isset($_POST["login"]) ) {
-
-	$username = $_POST["logname"];
-	$password = $_POST["logpass"];
-
-	$result = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
-
-	// cek username
-	if( mysqli_num_rows($result) === 1 ) {
-
-		// cek password
-		$row = mysqli_fetch_assoc($result);
-		if( password_verify($password, $row["password"]) ) {
-			// set session
-			$_SESSION["login"] = true;
-            $_SESSION["id"] = $row["id_user"];
-        
-			header("Location: home.php");
-			exit;
-		}
-	}
-
-	$error = true;
-
-}
-
 ?>
 
 <!DOCTYPE html>
